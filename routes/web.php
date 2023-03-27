@@ -17,4 +17,6 @@ use App\Http\Controllers\UserController;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/verify-mail/{token}',[UserController::class,'verificationmail']);
+Route::get('/verify-mail/{token}', [UserController::class, 'verificationmail']);
+Route::get('/reset-password', [UserController::class, 'resetPasswordView']);
+Route::Post('/reset-password', [UserController::class, 'resetPassword']);

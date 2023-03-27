@@ -20,8 +20,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::group([],function () {
+Route::group([], function () {
     Route::post('/register', [UserController::class, 'registeruser']);
-    Route::post('/login',[UserController::class,'login']);
-    Route::get('/send-verify-email/{email}',[UserController::class,'verifymail']);
+    Route::post('/login', [UserController::class, 'login']);
+    Route::get('/send-verify-email/{email}', [UserController::class, 'verifymail']);
+    Route::post('/forgot', [UserController::class, 'forgot']);
+    Route::get('/resetPassword', [UserController::class, 'resetPasswordView']);
+    Route::post('/resetpassword', [UserController::class, 'resetPassword']);
 });

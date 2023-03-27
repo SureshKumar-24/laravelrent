@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 
 use Validator;
 use Mail;
+use JWTAuth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 // use Auth;
@@ -55,7 +56,7 @@ class UserController extends Controller
             'email' => $req->email,
             'password' => Hash::make($req->password),
         ]);
-
+        $this->verifymail($user->email);
         if ($user) {
             return response()->json(['msg' => "Done", 'status' => "200", 'data' => $user]);
         } else {
@@ -72,34 +73,39 @@ class UserController extends Controller
         ]);
         $credentials = $request->only('email', 'password');
         $token = Auth::attempt($credentials);
-        $user= User::table('users')->get();
-        if(!$user->is_verified=0){
-        if (!$token) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Unauthorized',
-            ], 401);
-        }
-        
-        $user = Auth::user();
 
-        $data =
-            [
-                "success" => "",
-                "msg" => "",
-                "data" =>
+
+        $user = Auth::user();
+        if ($user->is_verified == 0) {
+            $this->verifymail($user->email);
+            return response()->json('Email sent your verification successfully');
+        } else {
+            if (!$token) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Unauthorized',
+                ], 401);
+            }
+
+            $user = Auth::user();
+            if ($user->is_verified == 0) {
+                $this->verifymail($user->email);
+            }
+
+            $data =
                 [
-                    "user_id" => "$user->id",
-                    "first_name" => "$user->first_name",
-                    "last_name" => "$user->last_name",
-                    "email" => "$user->email",
-                    "token" => "$token"
-                ]
-            ];
-        return $data;
-        }
-        else{
-            $this->verifymail($request->email);
+                    "success" => "",
+                    "msg" => "",
+                    "data" =>
+                    [
+                        "user_id" => "$user->id",
+                        "first_name" => "$user->first_name",
+                        "last_name" => "$user->last_name",
+                        "email" => "$user->email",
+                        "token" => "$token"
+                    ]
+                ];
+            return $data;
         }
     }
     //******************************************************************************/
@@ -134,6 +140,8 @@ class UserController extends Controller
             return response()->json(['success' => false, 'msg' => 'User is not Authenticated']);
         }
     }
+    //******************************************************************************/
+    //verify email
     public function verificationmail($token)
     {
         $user = User::where('remember_token', $token)->get();
@@ -149,5 +157,70 @@ class UserController extends Controller
         } else {
             return view('404');
         }
+    }
+    //******************************************************************************/
+    //Forgot password email send 
+    public function forgot(Request $request)
+    {
+        try {
+            $user = User::where('email', $request->email)->get();
+            if (count($user) > 0) {
+                $token = JWTAuth::fromUser($user->first());
+                $domain = URL::to('/');
+                $url = $domain . '/reset-password?token=' . $token;
+
+                $data['url'] = $url;
+                $data['email'] = $request->email;
+                $data['title'] = "Password Reset";
+                $data['body'] = "Please check here to below to verify your mail";
+
+                Mail::send('forgotpassword', ['data' => $data], function ($message) use ($data) {
+                    $message->to($data['email'])->subject($data['title']);
+                });
+                return response()->json(["msg" => 'Email sent you to  Password reset', "token" => $token]);
+            } else {
+                return response()->json(['success' => false, 'msg' => 'User is not found!']);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'msg' => $e->getMessage()]);
+        }
+    }
+    //******************************************************************************/
+    //ResetPasswordview
+    public function resetPasswordView(Request $request)
+    {
+        $user = JWTAuth::parseToken($request->token)->authenticate();
+        if (isset($request->token) && $user) {
+            $user = User::where('email', $user['email'])->get();
+            return view('resetpasswordview', compact('user'));
+        } else {
+            return view('404');
+        }
+    }
+    //******************************************************************************/
+    //ResetPassword code
+    public function resetPassword(Request $request)
+    {
+        // return $request;
+        $rules = array(
+            'password' => [
+                'required', 'confirmed', 'required_with:password_confirmation', Password::min(8)
+                    ->mixedCase()
+                    ->letters()
+                    ->numbers()
+                    ->symbols(),
+            ]
+        );
+        $validator = Validator::make($request->input(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $user = User::find($request->id);
+        // return $user;
+        $user->password = Hash::make($request->password);
+        $user->save();
+        return 'Password has been reset successfully';
     }
 }
