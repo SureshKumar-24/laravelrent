@@ -211,6 +211,8 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
+        // 'JWTAuth'=>PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth::class,
+        // 'JWTAuthFactory'=>PHPOpenSourceSaver\JWTAuth\Facades\JWTAuthFactory::class,
     ])->toArray(),
 
 ];

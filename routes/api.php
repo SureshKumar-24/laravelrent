@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AmenityController;
+use App\Http\Controllers\ImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,4 +29,8 @@ Route::group([], function () {
     Route::post('/forgot', [UserController::class, 'forgot']);
     Route::get('/resetPassword', [UserController::class, 'resetPasswordView']);
     Route::post('/resetpassword', [UserController::class, 'resetPassword']);
+});
+Route::group([], function () {
+    Route::post('/amenity', [AmenityController::class, 'amenityUpload']);
+    Route::post('/image', [ImageController::class, 'imageUpload']);
 });

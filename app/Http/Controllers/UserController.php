@@ -22,8 +22,8 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-
-    function registeruser(Request $req)
+    
+    public function registeruser(Request $req)
     {
         $rules = array(
             'first_name' => 'required|max:255',
