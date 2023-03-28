@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Image;
+use App\Models\User;
 use Validator;
 
 class ImageController extends Controller
 {
     public function imageUpload(Request $request)
     {
+        // $user = JWTAuth::parseToken($request->token)->authenticate();
+        $user = auth()->user()->id;
         $fileNames = [];
         foreach ($request->file('file_name') as $image) {
 
@@ -22,9 +25,8 @@ class ImageController extends Controller
         $image = new Image();
         $image->caption = $request->caption;
         $image->file_name = $images;
-        $image->user_id = $request->user_id;
+        $image->user_id = $user;
         $image->save();
-
         if ($image) {
             return response()->json([
                 'msg' => "Done", 'status' => "200",
@@ -36,5 +38,11 @@ class ImageController extends Controller
         } else {
             return ["result" => "error"];
         }
+    }
+    public function getImageUpload()
+    {
+        $images = User::with('images')->find(2);
+        // $images= User::find(2)->images;
+        return $images;
     }
 }

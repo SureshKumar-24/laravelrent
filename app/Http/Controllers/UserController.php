@@ -22,7 +22,7 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-    
+
     public function registeruser(Request $req)
     {
         $rules = array(
@@ -222,5 +222,11 @@ class UserController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
         return 'Password has been reset successfully';
+    }
+    public function logout()
+    {
+        auth()->logout();
+        
+        return "User Successfully logout";
     }
 }

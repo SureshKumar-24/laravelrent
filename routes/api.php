@@ -29,8 +29,12 @@ Route::group([], function () {
     Route::post('/forgot', [UserController::class, 'forgot']);
     Route::get('/resetPassword', [UserController::class, 'resetPasswordView']);
     Route::post('/resetpassword', [UserController::class, 'resetPassword']);
+    Route::get('/getimage', [ImageController::class, 'getImageUpload']);
 });
-Route::group([], function () {
+
+Route::group(['middleware' => 'api'], function ($routes) {
+    Route::post('/logout', [UserController::class, 'logout']);
     Route::post('/amenity', [AmenityController::class, 'amenityUpload']);
     Route::post('/image', [ImageController::class, 'imageUpload']);
+    
 });

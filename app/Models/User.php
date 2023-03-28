@@ -57,4 +57,8 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Amenity::class, 'user_id');
     }
+    public function images()
+    {
+        return $this->hasMany(Image::class, 'user_id');
+    }
 }
