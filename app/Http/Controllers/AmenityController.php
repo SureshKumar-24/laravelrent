@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Amenity;
+use App\Models\User;
 use Validator;
 
 class AmenityController extends Controller
@@ -45,5 +46,12 @@ class AmenityController extends Controller
         } else {
             return ["result" => "error"];
         }
+    }
+
+    public function getAmenity()
+    {
+        $amenities = User::with('amenity')->find(2);
+        // $images= User::find(2)->images;
+        return $amenities;
     }
 }

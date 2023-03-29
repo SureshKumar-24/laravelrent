@@ -17,4 +17,8 @@ class Image extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+    public function properties_images()
+    {
+        return $this->belongsToMany(Property::class, 'property_images', 'amenity_id', 'property_id');
+    }
 }

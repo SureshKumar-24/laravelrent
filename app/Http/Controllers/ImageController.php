@@ -15,7 +15,7 @@ class ImageController extends Controller
         // $user = JWTAuth::parseToken($request->token)->authenticate();
         $user = auth()->user()->id;
         $fileNames = [];
-        foreach ($request->file('file_name') as $image) {
+        foreach($request->file('file_name') as $image) {
 
             $imageName = $image->getClientOriginalName();
             $image->move(public_path('propertyimage'), $imageName);
@@ -41,7 +41,7 @@ class ImageController extends Controller
     }
     public function getImageUpload()
     {
-        $images = User::with('images')->find(2);
+        $images = User::with('images')->find(1);
         // $images= User::find(2)->images;
         return $images;
     }

@@ -61,4 +61,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Image::class, 'user_id');
     }
+    public function questions()
+    {
+        return $this->hasMany(Question::class, 'user_id');
+    }
+    
 }

@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AmenityController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\PropertyRoomController;
+use App\Http\Controllers\PropertyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,11 +33,15 @@ Route::group([], function () {
     Route::get('/resetPassword', [UserController::class, 'resetPasswordView']);
     Route::post('/resetpassword', [UserController::class, 'resetPassword']);
     Route::get('/getimage', [ImageController::class, 'getImageUpload']);
+    Route::get('/getamenity', [AmenityController::class, 'getAmenity']);
+    Route::get('/getQuestions', [QuestionController::class, 'getQuestions']);
+    Route::post('/propertyroom', [PropertyRoomController::class, 'roomcontroller']);
 });
 
 Route::group(['middleware' => 'api'], function ($routes) {
     Route::post('/logout', [UserController::class, 'logout']);
     Route::post('/amenity', [AmenityController::class, 'amenityUpload']);
     Route::post('/image', [ImageController::class, 'imageUpload']);
-    
+    Route::post('/questions', [QuestionController::class, 'QuestionController']);
+    Route::post('/property', [PropertyController::class, 'Property']);
 });
