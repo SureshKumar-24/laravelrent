@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('property_amenities', function (Blueprint $table) {
+        Schema::create('property_questions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('amenity_id');
+            $table->unsignedBigInteger('question_id');
             $table->unsignedBigInteger('property_id');
-            $table->timestamps();
-            $table->foreign('amenity_id')
-                ->references('id')->on('amenities')->onDelete('cascade');
+            $table->foreign('question_id')
+                ->references('id')->on('questions')->onDelete('cascade');
             $table->foreign('property_id')
                 ->references('id')->on('properties')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('property_amenities');
+        Schema::dropIfExists('property_questions');
     }
 };

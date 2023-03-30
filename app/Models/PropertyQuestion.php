@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Property_amenity extends Model
+class PropertyQuestion extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'amenity_id',
+        'question_id',
         'property_id',
     ];
 }

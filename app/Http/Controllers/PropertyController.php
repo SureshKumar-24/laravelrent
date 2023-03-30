@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Property;
+use App\Models\Image;
+use App\Models\Property_image;
+use App\Models\Property_room;
+use App\Models\Property_amenity;
+use App\Models\PropertyQuestion;
 use Validator;
 
 class PropertyController extends Controller
@@ -27,11 +32,15 @@ class PropertyController extends Controller
             'funishing_status' => 'required|integer|max:255',
             'funishing_details' => 'required|string|max:255',
         );
+
+
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         };
+
+
         $user = auth()->user()->id;
         $property = new Property();
         $property->user_id = $user;
@@ -50,27 +59,80 @@ class PropertyController extends Controller
         $property->funishing_status = $request->funishing_status;
         $property->funishing_details = $request->funishing_details;
         $property->save();
+
+        //******************Property Image**********************************/
+
+        $property_id = $property->id;
+        foreach ($request->images as $image) {
+            $propertyimage = new Property_image();
+            $propertyimage->image_id = $image['id'];
+            $propertyimage->property_id = $property_id;
+            $propertyimage->save();
+        }
+
+        //******************Property Amenity**********************************/
+
+        foreach ($request->amenities as $amenity) {
+            $propertyamenity = new Property_amenity();
+            $propertyamenity->amenity_id = $amenity['id'];
+            $propertyamenity->property_id = $property_id;
+            $propertyamenity->save();
+        }
+        //******************Property Rooms**********************************/
+        foreach ($request->rooms as $room) {
+            $propertyroom = new Property_room;
+            $propertyroom->name = $room['name'];
+            $propertyroom->url = $room['url'];
+            $propertyroom->caption = $room['caption'];
+            $propertyroom->room_type = $room['room_type'];
+            $propertyroom->property_id = $property_id;
+            $propertyroom->save();
+        }
+        //******************Property Rooms**********************************/
+        foreach ($request->questions as $question) {
+            $propertyquestion = new PropertyQuestion;
+            $propertyquestion->question_id = $question['question_id'];
+
+            $propertyquestion->property_id = $property_id;
+            $propertyquestion->save();
+        }
+
+        //******************Property Rooms**********************************/
+        $propertydata = Property::with('Images', 'amenities', 'Rooms', 'PropertyQuestion.question_options')->find($property_id);
+
+
+
         if ($property) {
             return response()->json([
                 'msg' => "Done", 'status' => "200",
-                'user_id' => $property->user_id,
-                'name' => $property->name,
-                'property_type' => $property->property_type,
-                'description' => $property->description,
-                'tenancy_status' =>  $property->tenancy_status,
-                'street' =>  $property->street,
-                'city' => $property->city,
-                'postal_code' => $property->postal_code,
-                'state' => $property->state,
-                'country' => $property->country,
-                'longitude' => $property->longitude,
-                'latitude' => $request->latitude,
-                'area' => $property->area,
-                'funishing_status' => $property->funishing_status,
-                'funishing_details' => $property->funishing_details,
+                'Property' => $propertydata,
             ]);
         } else {
             return ["result" => "error"];
         }
+    }
+
+    public function getProperty()
+    {
+        $property = Property::with('Images')->find(2);
+        return $property;
+    }
+    //delete the property_id
+    public function delete($id)
+    {
+        $property = Property::find($id);
+        $property->delete();
+        return 'Delete Successfully';
+        }
+
+    public function getAmenity()
+    {
+        $property = Property::with('Amenities')->find(1);
+        return $property;
+    }
+    public function getQuestion()
+    {
+        $property = Property::with('Question', 'Question_option')->find(1);
+        return $property;
     }
 }

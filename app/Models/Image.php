@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Image extends Model
 {
     use HasFactory;
+    protected $hidden = ['pivot'];
+
     protected $fillable = [
         'caption',
         'user_id',
@@ -17,8 +19,8 @@ class Image extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    public function properties_images()
+    public function pro_images()
     {
-        return $this->belongsToMany(Property::class, 'property_images', 'amenity_id', 'property_id');
+        return $this->belongsToMany(Property::class, 'property_images', 'image_id', 'property_id');
     }
 }

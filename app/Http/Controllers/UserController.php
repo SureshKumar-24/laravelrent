@@ -44,12 +44,6 @@ class UserController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
-        // $user = new User();
-        // $user->first_name = $req->first_name;
-        // $user->last_name = $req->last_name;
-        // $user->email = $req->email;
-        // $user->password = Hash::make($req->password);
-        // $result = $user->save();
         $user = User::create([
             'first_name' => $req->first_name,
             'last_name' => $req->last_name,
@@ -63,6 +57,7 @@ class UserController extends Controller
             return ["result" => "error"];
         }
     }
+    
     //Login user
     //******************************************************************************/
     public function login(Request $request)
@@ -102,7 +97,8 @@ class UserController extends Controller
                         "first_name" => "$user->first_name",
                         "last_name" => "$user->last_name",
                         "email" => "$user->email",
-                        "token" => "$token"
+                        "token" => "$token",
+                        'expires_in'=>auth()->factory()->getTTL()*60
                     ]
                 ];
             return $data;

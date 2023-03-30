@@ -35,7 +35,11 @@ Route::group([], function () {
     Route::get('/getimage', [ImageController::class, 'getImageUpload']);
     Route::get('/getamenity', [AmenityController::class, 'getAmenity']);
     Route::get('/getQuestions', [QuestionController::class, 'getQuestions']);
+    Route::get('/getProperty', [PropertyController::class, 'getProperty']);
+    Route::get('/getAmenity', [PropertyController::class, 'getAmenity']);
+    Route::get('/getQuestion', [PropertyController::class, 'getQuestion']);
     Route::post('/propertyroom', [PropertyRoomController::class, 'roomcontroller']);
+    Route::delete('/delete/{id}', [PropertyController::class, 'delete']);
 });
 
 Route::group(['middleware' => 'api'], function ($routes) {

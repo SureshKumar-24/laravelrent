@@ -41,8 +41,8 @@ class ImageController extends Controller
     }
     public function getImageUpload()
     {
-        $images = User::with('images')->find(1);
-        // $images= User::find(2)->images;
+        // $images = Image::with('pro_images')->find(2);
+        $images= User::find(2)->images;
         return $images;
     }
 }

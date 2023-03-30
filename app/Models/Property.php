@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Property extends Model
 {
     use HasFactory;
+    protected $hidden = ['pivot'];
+
     protected $fillable = [
         'user_id',
         'name',
@@ -26,12 +28,23 @@ class Property extends Model
         'funishing_details',
     ];
 
-    public function property_amenities()
+    public function Amenities()
     {
-        return $this->belongsToMany(Amenity::class, 'property_amenities', 'amenity_id', 'property_id');
+        return $this->belongsToMany(Amenity::class, 'property_amenities', 'property_id', 'amenity_id');
     }
-    public function property_images()
+
+    public function Images()
     {
-        return $this->belongsToMany(Image::class, 'property_images', 'image_id', 'property_id');
+        // return $this->belongsToMany(Image::class, 'property_images','property_id','image_id');
+        return $this->belongsToMany(Image::class, 'property_images', 'property_id', 'image_id');
+    }
+    public function Rooms()
+    {
+        return $this->hasMany(Property_room::class, 'property_id');
+    }
+    public function PropertyQuestion()
+    {
+        // return $this->belongsToMany(Image::class, 'property_images','property_id','image_id');
+        return $this->belongsToMany(Question::class, 'property_questions', 'property_id', 'question_id');
     }
 }

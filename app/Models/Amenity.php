@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Amenity extends Model
 {
     use HasFactory;
+    protected $hidden = ['pivot'];
     protected $fillable = [
         'name',
         'icon',
@@ -17,7 +18,7 @@ class Amenity extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    public function properties_amenity()
+    public function pro_amenity()
     {
         return $this->belongsToMany(Property::class, 'property_amenities', 'amenity_id', 'property_id');
     }

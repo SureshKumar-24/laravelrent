@@ -15,4 +15,8 @@ class Property_room extends Model
         'caption',
         'room_type'
     ];
+    public function Property_room()
+    {
+        return $this->belongsTo(Property::class, 'property_id');
+    }
 }
