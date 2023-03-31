@@ -104,7 +104,8 @@ class PropertyController extends Controller
 
         if ($property) {
             return response()->json([
-                'msg' => "Done", 'status' => "200",
+                'msg' => "Done", 
+                'status' => "Property Created Successfully",
                 'Property' => $propertydata,
             ]);
         } else {
