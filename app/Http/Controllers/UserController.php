@@ -226,7 +226,6 @@ class UserController extends Controller
         // return "User Successfully logout";
         return response()->json(["message" => 'User logout Successfully']);
     }
-
     //******************************************************************************/
     public function changePasswordSave(Request $request)
     {

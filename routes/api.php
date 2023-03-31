@@ -26,8 +26,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::group([], function () {
-    Route::post('/register', [UserController::class, 'registeruser']);
-    Route::post('/login', [UserController::class, 'login']);
+    Route::post('/register', [UserController::class, 'registeruser'])->name('register');
+    Route::post('/login', [UserController::class, 'login'])->name('login');
     Route::get('/send-verify-email/{email}', [UserController::class, 'verifymail']);
     Route::post('/forgot', [UserController::class, 'forgot']);
     Route::get('/resetPassword', [UserController::class, 'resetPasswordView']);
@@ -42,6 +42,7 @@ Route::group([], function () {
     Route::delete('/delete/{id}', [PropertyController::class, 'delete']);
 });
 
+// Route::group(['middleware' => 'api' 'isAdmin'], function ($routes) {
 Route::group(['middleware' => 'api'], function ($routes) {
     Route::post('/logout', [UserController::class, 'logout']);
     Route::post('/changePassword', [UserController::class, 'changePasswordSave']);
