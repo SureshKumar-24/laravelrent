@@ -251,7 +251,7 @@ class UserController extends Controller
 
         // The passwords matches
         if (!Hash::check($request->get('current_password'), $auth->password)) {
-            return response()->json(["message" => 'Current Password is Invalid']);
+            return response()->json(["message" => 'Current Password is invalid']);
         }
 
         // Current password and new password same
