@@ -57,7 +57,7 @@ class UserController extends Controller
             return ["result" => "error"];
         }
     }
-    
+
     //Login user
     //******************************************************************************/
     public function login(Request $request)
@@ -89,7 +89,7 @@ class UserController extends Controller
 
             $data =
                 [
-                    "success" => "",
+                    "success" => "You have successfully logged in.",
                     "msg" => "",
                     "data" =>
                     [
@@ -98,7 +98,7 @@ class UserController extends Controller
                         "last_name" => "$user->last_name",
                         "email" => "$user->email",
                         "token" => "$token",
-                        'expires_in'=>auth()->factory()->getTTL()*60
+                        'expires_in' => auth()->factory()->getTTL() * 60
                     ]
                 ];
             return $data;
@@ -214,15 +214,57 @@ class UserController extends Controller
         }
 
         $user = User::find($request->id);
-        // return $user;
         $user->password = Hash::make($request->password);
         $user->save();
-        return 'Password has been reset successfully';
+        return response()->json(["message" => 'Password reset Successfully']);
     }
+    //******************************************************************************/
+    //Update Password
     public function logout()
     {
         auth()->logout();
-        
-        return "User Successfully logout";
+        // return "User Successfully logout";
+        return response()->json(["message" => 'User logout Successfully']);
+    }
+
+    //******************************************************************************/
+    public function changePasswordSave(Request $request)
+    {
+        $rules = array(
+            'current_password' => 'required|string',
+            'new_password' => [
+                'required', Password::min(8)
+                    ->mixedCase()
+                    ->letters()
+                    ->numbers()
+                    ->symbols(),
+            ],
+            'password_confirmation' => [
+                'same:new_password'
+            ]
+        );
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $auth = Auth::user();
+
+        // The passwords matches
+        if (!Hash::check($request->get('current_password'), $auth->password)) {
+            return response()->json(["message" => 'Current Password is Invalid']);
+        }
+
+        // Current password and new password same
+        if (strcmp($request->get('current_password'), $request->new_password) == 0) {
+            // return redirect()->back()->with("error", "New Password cannot be same as your current password.");
+            return response()->json(["message" => 'New Password cannot be same as your current password.']);
+        }
+
+        $user =  User::find($auth->id);
+        $user->password =  Hash::make($request->new_password);
+        $user->save();
+        // return back()->with('success', "Password Changed Successfully");
+        return response()->json(["message" => 'Password Changed Successfully']);
     }
 }

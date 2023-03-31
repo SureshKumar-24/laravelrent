@@ -12,12 +12,11 @@ class Amenity extends Model
     protected $fillable = [
         'name',
         'icon',
-        'user_id'
     ];
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
+    // public function user()
+    // {
+    //     return $this->belongsTo(User::class, 'user_id');
+    // }
     public function pro_amenity()
     {
         return $this->belongsToMany(Property::class, 'property_amenities', 'amenity_id', 'property_id');

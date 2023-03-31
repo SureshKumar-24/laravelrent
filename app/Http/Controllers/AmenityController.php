@@ -20,7 +20,7 @@ class AmenityController extends Controller
         // if ($validator->fails()) {
         //     return response()->json($validator->errors(), 400);
         // }
-        $user = auth()->user()->id;
+        // $user = auth()->user()->id;
         $fileNames = [];
 
         foreach ($request->file('icon') as $image) {
@@ -33,7 +33,6 @@ class AmenityController extends Controller
         $amenity = new Amenity();
         $amenity->name = $request->name;
         $amenity->icon = $images;
-        $amenity->user_id = $user;
         $amenity->save();
 
         if ($amenity) {
@@ -41,7 +40,6 @@ class AmenityController extends Controller
                 'msg' => "Done", 'status' => "200",
                 'name' => $amenity->name,
                 'icon' => $amenity->icon,
-                'user_id' => $amenity->user_id,
             ]);
         } else {
             return ["result" => "error"];

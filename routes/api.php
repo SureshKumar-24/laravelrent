@@ -44,6 +44,7 @@ Route::group([], function () {
 
 Route::group(['middleware' => 'api'], function ($routes) {
     Route::post('/logout', [UserController::class, 'logout']);
+    Route::post('/changePassword', [UserController::class, 'changePasswordSave']);
     Route::post('/amenity', [AmenityController::class, 'amenityUpload']);
     Route::post('/image', [ImageController::class, 'imageUpload']);
     Route::post('/questions', [QuestionController::class, 'QuestionController']);

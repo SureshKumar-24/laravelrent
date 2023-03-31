@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Question_option extends Model
 {
     use HasFactory;
+    protected $hidden = ['pivot'];
     protected $fillable = [
         'text',
         'preferred',
