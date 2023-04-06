@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Resume</title>
+    <title>PdfView</title>
 </head>
 
 <body>

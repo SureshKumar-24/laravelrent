@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PropertyController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
@@ -20,3 +21,5 @@ Route::get('/', function () {
 Route::get('/verify-mail/{token}', [UserController::class, 'verificationmail']);
 Route::get('/reset-password', [UserController::class, 'resetPasswordView']);
 Route::Post('/reset-password', [UserController::class, 'resetPassword']);
+Route::get('pdf/view',[PropertyController::class,'pdfView'])->name('pdf.view');
+Route::get('pdf/convert',[PropertyController::class,'pdfConvert'])->name('pdf.convert');
